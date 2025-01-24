@@ -1,11 +1,39 @@
+const dotenv = require('dotenv');
+if (process.env.NODE_ENV === 'development') {
+    dotenv.config({ path: 'config/.env.dev' });
+} else if (process.env.NODE_ENV === 'test') {
+    dotenv.config({ path: 'config/.env.test' });
+}
+require('./models/User');
+require('./services/passport');
+
+const expressSession = require('express-session');
+const passport = require('passport');
+const mongoose = require('mongoose');
 const express = require('express');
 
+try {
+    mongoose.connect(process.env.MONGO_URI);
+} catch (error) {
+    console.log('Error with mongo connection:', error);
+}
 const app = express();
+app.use(
+    expressSession({
+        secret: process.env.EXPRESS_SESSION_SECRET,
+        resave: false,
+        saveUninitialized: true,
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.get('/', (req, res) => {
-    res.send({ hi: 'Hello World' });
-});
+require('./routes/auth')(app);
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log(`Server is running on port ${process.env.PORT || 3000}`);
+app.listen(process.env.PORT || 5000, () => {
+    console.log(
+        `Server is running on port ${process.env.PORT || 5000} - env: ${
+            process.env.NODE_ENV
+        }`
+    );
 });
