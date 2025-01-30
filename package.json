@@ -5,19 +5,28 @@
     "main": "index.js",
     "scripts": {
         "start": "node index.js ",
-        "dev": "NODE_ENV=development nodemon index.js "
+        "server": "NODE_ENV=development nodemon index.js ",
+        "client": "npm run start --prefix client",
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "onrender-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "body-parser": "^1.20.3",
         "cookie-session": "^2.1.0",
         "dotenv": "^16.4.7",
         "express": "^4.21.2",
         "express-session": "^1.18.1",
         "mongoose": "^8.9.5",
-        "nodemon": "^3.1.9",
         "passport": "^0.7.0",
-        "passport-google-oauth20": "^2.0.0"
+        "passport-google-oauth20": "^2.0.0",
+        "stripe": "^17.5.0",
+        "twilio": "^5.4.3"
+    },
+    "devDependencies": {
+        "concurrently": "^9.1.2",
+        "nodemon": "^3.1.9"
     }
 }

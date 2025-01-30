@@ -7,6 +7,7 @@ if (process.env.NODE_ENV === 'development') {
 require('./models/User');
 require('./services/passport');
 
+const bodyParser = require('body-parser');
 const expressSession = require('express-session');
 const passport = require('passport');
 const mongoose = require('mongoose');
@@ -18,6 +19,8 @@ try {
     console.log('Error with mongo connection:', error);
 }
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
     expressSession({
         secret: process.env.EXPRESS_SESSION_SECRET,
@@ -29,6 +32,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require('./routes/auth')(app);
+require('./routes/stripe')(app);
+require('./routes/twilio')(app);
 
 app.listen(process.env.PORT || 5000, () => {
     console.log(

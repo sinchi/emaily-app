@@ -3,14 +3,12 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const mongoose = require('mongoose');
 
 passport.serializeUser((user, done) => {
-    console.log('serializeUser', user);
     done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
     const User = mongoose.model('users');
     const user = await User.findById(id);
-    console.log('deserializeUser', user);
     done(null, user);
 });
 
