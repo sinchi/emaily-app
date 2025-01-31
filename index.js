@@ -34,6 +34,7 @@ app.use(passport.session());
 require('./routes/auth')(app);
 require('./routes/stripe')(app);
 require('./routes/twilio')(app);
+require('./routes/infoBip')(app);
 
 app.listen(process.env.PORT || 5000, () => {
     console.log(
